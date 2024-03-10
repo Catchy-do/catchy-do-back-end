@@ -95,16 +95,11 @@ public class RegionServicesImp  {
 	}
 
 	
-	public Object getVilleByRegion(String id) {
-		long regionID=Long.parseLong(id);
-		Region regs = regDao.findRegionByID(regionID);
+	public Object getVilleByRegion(Long id) {
+		Region regs = regDao.findRegionByID(id);
 		if (regs != null) {
-		
-
-			
 				CountryResp c = getVilleInfo(regs);
 
-			
 			Response<CountryResp> respense = new Response<CountryResp>();
 			respense.setData(c);
 			respense.setStatus("200");
