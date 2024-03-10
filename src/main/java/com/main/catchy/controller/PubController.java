@@ -63,7 +63,7 @@ public class PubController {
 	}
 
 	@GetMapping("/getVille/{id}")
-	public Object getVille(@PathVariable(name = "id") String id) {
+	public Object getVille(@PathVariable(name = "id") Long id) {
 
 		return regsrv.getVilleByRegion(id);
 
