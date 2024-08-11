@@ -456,5 +456,46 @@ public class UserServicesImp {
     }
 
 
+    public List<UserProfile> menteeList() {
+        List<UserProfile> result = new ArrayList();
+        List<Contact> contact = cntDao.findMentees();
 
+
+        contact.stream().forEach(ctc -> {
+            List<MediaBody> media = new ArrayList<>();
+            List<CompetenceBody> competences = new ArrayList<>();
+            List<MentorCompetences> mentorCompetence = mentorCmpDao.findCompetenceByContactID(ctc.getContactId());
+            mentorCompetence.stream().forEach(comp -> {
+                var cmp = cmpDao.findById(comp.getCompetenceId()).get();
+
+                competences.add(CompetenceBody.builder().competenceId(cmp.getCompetenceId()).intitule(cmp.getIntitule())
+                        .build());
+            });
+            List<Images> images = imagesDao.findAllUserFile(ctc.getUsr().getId());
+            images.stream().forEach(img -> {
+
+                media.add(MediaBody.builder().id(img.getImageId()).intitule(img.getImgName()).url(img.getImgURL())
+                        .type(img.getType()).description(img.getDescription()).build());
+            });
+
+            var imageURL = !media.isEmpty() ? media.stream().filter(im -> im.getType().equals("PIC")).findFirst().get().getUrl() : null;
+
+            var info = UserProfile.builder().adresse(ctc.getAdresse()).age(ctc.getAge()).cin(ctc.getCin())
+                    .imgUrl(imageURL)
+                    .countryName(ctc.getVilleContact() != null ? ctc.getVilleContact().getVilleRegion().getPaysRegion().getCapital() : null)
+                    .DateOfBirth(ctc.getDateOfBirth()).email(ctc.getEmail()).firstName(ctc.getFirstName()).zipCode(ctc.getZipCode())
+                    .lastName(ctc.getLastName()).ville(ctc.getVilleContact() != null ? ctc.getVilleContact().getName() : null)
+                    .villeID(ctc.getVilleContact() != null ? ctc.getVilleContact().getVilleID() : null).lat(ctc.getLat()).lng(ctc.getLng())
+                    .isMentor(ctc.getIsMentor()).notifID(ctc.getNotifId()).phoneNumber(ctc.getPhoneNumber())
+                    .region(ctc.getVilleContact() != null ? ctc.getVilleContact().getVilleRegion().getName() : null)
+                    .biographie(ctc.getBiographie()).niveau(ctc.getNiveau())
+                    .regionID(ctc.getVilleContact() != null ? ctc.getVilleContact().getVilleRegion().getRegionId() : null).sexe(ctc.getSexe())
+                    .userId(ctc.getUsr().getId()).competences(competences).media(media).build();
+
+
+            result.add(info);
+        });
+
+        return result;
+    }
 }

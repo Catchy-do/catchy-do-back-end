@@ -142,4 +142,10 @@ public class MainController {
         var token=  filter.parseJwt(request);
         return appointmentServices.getMenteeBookings(userId, token);
     }
+    @GetMapping("/menteeList")
+    public List<UserProfile> menteeList() {
+
+        return userServices.menteeList();
+
+    }
 }

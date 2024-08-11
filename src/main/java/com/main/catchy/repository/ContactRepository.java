@@ -32,7 +32,6 @@ public interface ContactRepository extends JpaRepository<Contact, Long>{
 			"and c.contactId = m.contactId and m.competenceId in :cID ")
 	List<Contact> findMentors(@Param("sexe")String sexe, @Param("cID")List<Long> cID);
 
-
-
-
+	@Query("select c from Contact c  where c.isMentor = FALSE ")
+	List<Contact> findMentees();
 }
